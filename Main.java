@@ -7,11 +7,11 @@ import java.awt.image.*;
 
 public class Main extends JPanel{
 
-  public static int X_CONST=100;
+  public static int X_CONST=220;
   public static int Y_CONST=100;
   public static int count=0;
   public static void paintStuff(){
-    BufferedImage bi=new BufferedImage(3000,2000,
+    BufferedImage bi=new BufferedImage(6000,4000,
                                         BufferedImage.TYPE_INT_BGR);
     Extract.readInDictionary();
     Graphics2D g2 = bi.createGraphics();
@@ -22,17 +22,18 @@ public class Main extends JPanel{
     Font pinyinFont = new Font("Serif", Font.PLAIN, 15);
     Font latinFont = new Font("Serif", Font.PLAIN, 10);
     try (BufferedReader br = new BufferedReader(
-                                new FileReader(new File("HSK5")))) {
+                                new FileReader(new File(/*"HSK5"*/"pleco-out.txt")))) {
       String line;
       while ((line = br.readLine()) != null&&count<1301) {
+        int NO_COLS = 26;
         // process the line.
         count++;
-        int x=X_CONST*(count%30);
-        int y=Y_CONST*(count/30+1);
+        int x=X_CONST*(count%NO_COLS);//30);
+        int y=Y_CONST*(count/NO_COLS+1);
         g2.setFont(font);
         g2.drawString(line, x,y);
-        int y_pinyin = (Y_CONST )*(count/30+1) + Y_CONST/4;
-        int y_text = (Y_CONST )*(count/30+1) + Y_CONST/2;
+        int y_pinyin = (Y_CONST )*(count/NO_COLS+1) + Y_CONST/4;
+        int y_text = (Y_CONST )*(count/NO_COLS+1) + Y_CONST/2;
         g2.setFont(pinyinFont);
         Word word= Extract.getWordFromChinese(line);
         String pinyin = "invalid pinyin";
@@ -40,8 +41,8 @@ public class Main extends JPanel{
         if(word != null){
           pinyin = word.getPinyinWithTones();
           english = word.getDefinition();
-          if(english.length()>20){
-          english = english.substring(0,20);
+          if(english.length()>35){
+          english = english.substring(0,35);
           }
         }
         g2.drawString(pinyin,x,y_pinyin);
