@@ -16,7 +16,7 @@ public class Main extends JPanel{
 
   public static String FILE_PATH = "HSK6";/*"pleco-out.txt"*/
 
-  private static final double pageRatio = 1.618; //TODO: maybe allow other formats e.g. letter, portrait, ...
+  private static final double PAGE_RATIO = 1.618; //TODO: maybe allow other formats e.g. letter, portrait, ...
 
   private static final int xWidth = 6000;
 
@@ -24,7 +24,7 @@ public class Main extends JPanel{
   public static void paintStuff() throws IOException {
 //    BufferedImage bi=new BufferedImage(6000,4000,
   //                                      BufferedImage.TYPE_INT_BGR);
-    BufferedImage bi = new BufferedImage(xWidth, (int)(xWidth/ pageRatio), BufferedImage.TYPE_INT_BGR);
+    BufferedImage bi = new BufferedImage(xWidth, (int)(xWidth/ PAGE_RATIO), BufferedImage.TYPE_INT_BGR);
     Extract.readInDictionary();
     Graphics2D g2 = bi.createGraphics();
 //    g2.setColor(Color.WHITE);
@@ -39,18 +39,10 @@ public class Main extends JPanel{
     try (BufferedReader br = new BufferedReader(
                                 new FileReader(FILE_PATH))) {
       String line;
-      while ((line = br.readLine()) != null&&count<noLines) {
-        //int noCols = //26;
-      //  int noRows = (int)Math.ceil(Math.sqrt(Math.ceil(noLines / pageRatio)));//TODO:is using ceil twice here too generous?
-      //  int noCols = (int) Math.ceil(noRows * pageRatio);//THIS ASSUMES width and height of items are the same (THEY ARE NOT)
-
-//        int noRows = (int)Math.ceil(Math.sqrt(noLines/(pageRatio*charRatio)));//TODO:write formulas and stuffs
-  //      int noCols = (int)(noLines/noRows);
-
-        int noRows = (int) Math.ceil(Math.sqrt((charRatio * noLines))/pageRatio);
+      while ((line = br.readLine()) != null && count < noLines) {
+        int noRows = (int) Math.ceil(Math.sqrt(charRatio * noLines) / PAGE_RATIO);
         int noCols = (int) (noLines/noRows);
         // process the line.
-        count++;
         int x=X_CONST*(count%noCols);//30);
         int y=Y_CONST*(count/noCols+1);
         g2.setFont(font);
@@ -71,9 +63,10 @@ public class Main extends JPanel{
         g2.drawString(pinyin,x,y_pinyin);
         g2.setFont(latinFont);
         g2.drawString(english, x,y_text);
+        count++;
       }
       ImageIO.write(bi, "jpg", new File("./output_image.jpg"));
-    }catch(Exception e){e.printStackTrace();} 
+    } catch(Exception e){e.printStackTrace();}
   }
   public static void main(String[] args){
     try {
