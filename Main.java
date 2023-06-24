@@ -18,23 +18,24 @@ public class Main extends JPanel{
 
   private static final double PAGE_RATIO = 1.618; //TODO: maybe allow other formats e.g. letter, portrait, ...
 
-  private static final int xWidth = 6000;
+  private static final int pageWidth = 6000;
+  private static final int pageHeight = (int)(pageWidth / PAGE_RATIO);
 
   //TODO:THERE ARE A LOT OF POTENTIAL precision issues and stuff!!
   public static void paintStuff() throws IOException {
 //    BufferedImage bi=new BufferedImage(6000,4000,
   //                                      BufferedImage.TYPE_INT_BGR);
-    BufferedImage bi = new BufferedImage(xWidth, (int)(xWidth/ PAGE_RATIO), BufferedImage.TYPE_INT_BGR);
+    BufferedImage bi = new BufferedImage(pageWidth, pageHeight, BufferedImage.TYPE_INT_BGR);
     Extract.readInDictionary();
     Graphics2D g2 = bi.createGraphics();
-//    g2.setColor(Color.WHITE);
-//    g2.fillRect(0,0,g2.getWidth(),g2.getHeight());
-//    g2.setColor(Color.BLACK);
+    g2.setBackground(Color.WHITE);
+    g2.clearRect(0,0, pageWidth, pageHeight);
+    g2.setColor(Color.BLACK);
     Font font = new Font("Serif", Font.PLAIN, 40);
     Font pinyinFont = new Font("Serif", Font.PLAIN, 15);
     Font latinFont = new Font("Serif", Font.PLAIN, 10);
 
-    final long noLines = Files.lines(Paths.get(FILE_PATH)).count();//+1? as we seem to start at 0 or smth (first square is blank - though that needs fixing)
+    final long noLines = Files.lines(Paths.get(FILE_PATH)).count();
 
     try (BufferedReader br = new BufferedReader(
                                 new FileReader(FILE_PATH))) {
